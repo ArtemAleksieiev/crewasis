@@ -49,10 +49,11 @@
       {% include "site_template/sidebar.html" %}
      <main class="mdl-layout__content mdl-color--grey-100">
         <div class="mdl-grid fbd-content">
-          <div class="fbd-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--8-col">
+
+          <div class="fbd-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--9-col">
                {% block app_content %}{% endblock app_content %}
           </div>
-          {% include "site_template/rightbar.html" %}
+              {% include "site_template/rightbar.html" %}
         </div>
       </main>
     </div>
