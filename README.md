@@ -9,8 +9,6 @@ Python Postgresql database
 1. After installing and setting python and postgres (with pgAdmin using for creating PostgreSQL Server according to http://www.postgresqltutorial.com/connect-to-postgresql-database/) on your local windows machine you can check using these commands in git bash:
  ```
  $ python -V
- ```
- ```
  $ postgres -V
  ```
  If these commands run without error and shows versions programs installed correctly
@@ -31,19 +29,20 @@ Python Postgresql database
     host    replication     DIMA        127.0.0.1/32            trust
     host    replication     DIMA        ::1/128                 trust
 ```
-And restart PostgreSQL Server in pgAdmin. In some cases you will need to create PostgreSQL Server again according to step 1. To check if trust authentication try to access database <postgres> using command above. Note that password is not required. 
-  3. Now let's set our database <crewasis> and new role. For this run these command inside <postgres> database:
+  And restart PostgreSQL Server in pgAdmin. In some cases you will need to create PostgreSQL Server again according to first step. To check if trust authentication try to access database 'postgres' using command above. Note that password is not required.
+ 
+ 3. Now let's set our database 'crewasis' and new role. For this run these command inside 'postgres' database:
   ```
   postgres=# create database crewasis;
   postgres=# create user <username>;
   postgres=# grant all privileges on database crewasis to <username>;
   postgres=# \q \\ for exit
   ```
-  For access database crewasis from flask app by default, i.e without username, you can indicate <username> the same what you have in your git bash console. To find out your username try to run these command from git bash:
+  For access database crewasis from flask app by default, i.e without username, you can indicate 'username' the same what you have in your git bash console. To find out your username try to run these command from git bash:
   ```
   $ psql postgres
   ```
- You may get an error: FATAL: role '<username>' does not exist. Try using this <username> for new role name in second line. 
+ You may get an error: FATAL: role 'username' does not exist. Try using this 'username' for new role name in second line. 
  Also when you are creating new user you may get an error related to encoding. If there is such an error run these command:
   ```
   postgres=# set client_encoding='utf8'
