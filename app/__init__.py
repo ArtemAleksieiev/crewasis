@@ -20,6 +20,7 @@ bootstrap = Bootstrap()
 def create_app(config_class=DevelopmentConfig):
     app = Flask(__name__)
     app.config.from_object(config_class)
+    app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
     db.init_app(app)
     migrate.init_app(app, db)

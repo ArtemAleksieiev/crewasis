@@ -16,7 +16,7 @@ class Config(object):
     MAIL_USE_TLS = True
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
-
+    SEND_FILE_MAX_AGE_DEFAULT = 0
 #class ProductionConfig(Config):
 #    DEBUG = False
 
@@ -29,6 +29,7 @@ class Config(object):
 class DevelopmentConfig(Config):
     DEVELOPMENT = True
     DEBUG = True
+    SEND_FILE_MAX_AGE_DEFAULT = 0
 
 
 #class TestingConfig(Config):

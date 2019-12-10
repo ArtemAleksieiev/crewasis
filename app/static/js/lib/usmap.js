@@ -7,6 +7,22 @@ $("path, circle").mouseleave(function(e) {
     $('#info-box').css('display','none');
 });
 
+$('path').on('click', function() {
+                            $.ajax({
+                                url: "/data",
+                                method: "POST",
+                                data: JSON.stringify({id : $(this).attr("id"), year : $('[role="slider"]').attr("aria-valuetext")}),
+                                contentType: 'application/json;charset=UTF-8',
+                                success: function(data){
+	        $('#plot_div').html(data.div);
+    		$('#script_div').html(data.script);
+            },
+	    error: function(error){
+		console.log(error);
+	    }
+                            });
+                        });
+
 $(document).mousemove(function(e) {
     $('#info-box').css('top',e.pageY-$('#info-box').height()-30);
     $('#info-box').css('left',e.pageX-($('#info-box').width())/2);
@@ -19,4 +35,4 @@ var ios = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     window.open(link,'_blank');
     return false;
     });
-}     
+}
