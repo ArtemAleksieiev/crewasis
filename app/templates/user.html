@@ -15,9 +15,34 @@
         </tr>
     </table>
     <hr>
-    {% for post in posts %}
+  <!--  {% for post in posts %}
     <p>
     {{ post.author.username }} says: <b>{{ post.body }}</b>
     </p>
-    {% endfor %}
+    {% endfor %} -->
+    <h1>Upload new pdf File</h1>
+    <div class="row">
+        <form class="form-inline center-block" action="{{ url_for('main.user', username=current_user.username) }}" method="POST" enctype="multipart/form-data">
+          <div>
+            <p>Title:</p>
+              <input type ='text' size='30' name='title'>
+          </div>
+          <br />
+            {{ form.hidden_tag() }}
+            <div class="input-group">
+                <label id="browsebutton" class="btn btn-default input-group-addon" for="my-file-selector">
+                    {{ form.input_file(id="my-file-selector", style="display:none;") }}
+                    Browse...
+                </label>
+                <input type="text" class="form-control" readonly>
+            </div>
+            {{ form.submit(class_="btn btn-primary") }}
+        </form>
+    </div>
+<hr>
+
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/lib/inputFileButton.js') }}" ></script>
 {% endblock %}

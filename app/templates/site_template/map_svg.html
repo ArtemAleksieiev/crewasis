@@ -113,7 +113,8 @@
   </g>
 <path id="path67" fill="none" stroke="#A9A9A9" stroke-width="2" d="M385,593v55l36,45 M174,525h144l67,68h86l53,54v46"/>
 </svg>
-<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
 <!-- <script>
 $(document).ready(function() {
   $(".container-map").css({
@@ -122,5 +123,44 @@ $(document).ready(function() {
 });
 </script>  -->
 
-<script src="{{ url_for('static', filename='js/lib/usmap.js') }}"></script>
+<script type="text/javascript">
+	$("path, circle").hover(function(e) {
+	    $('#info-box').css('display','block');
+	    $('#info-box').html($(this).data('info'));
+	});
+
+	$("path, circle").mouseleave(function(e) {
+	    $('#info-box').css('display','none');
+	});
+
+	$('path').on('click', function() {
+	                            $.ajax({
+	                                url: "/data",
+	                                method: "POST",
+	                                data: JSON.stringify({id : $(this).attr("id"), year : $('[role="slider"]').attr("aria-valuetext")}),
+	                                contentType: 'application/json;charset=UTF-8',
+	                                success: function(data){
+		        $('#plot_div').html(data.div);
+	    		$('#script_div').html(data.script);
+	            },
+		    error: function(error){
+			console.log(error);
+		    }
+	                            });
+	                        });
+
+	$(document).mousemove(function(e) {
+	    $('#info-box').css('top',e.pageY-$('#info-box').height()-30);
+	    $('#info-box').css('left',e.pageX-($('#info-box').width())/2);
+	}).mouseover();
+
+	var ios = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+	    if(ios) {
+	    $('a').on('click touchend', function() {
+	    var link = $(this).attr('href');
+	    window.open(link,'_blank');
+	    return false;
+	    });
+	}
+</script>
 </div>

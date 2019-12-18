@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify
 from app import db
-from app.main.forms import EditProfileForm
+from app.main.forms import EditProfileForm, UploadForm
 from flask_login import current_user, login_required
 from app.models import Users
 from app.main import bp
@@ -22,6 +22,8 @@ js_resources = resources.render_js()
 css_resources = resources.render_css()
 
 import psycopg2
+from flask import current_app
+import base64
 
 DATABASE_URL = 'crewasis'
 
@@ -133,15 +135,24 @@ def get_data(query):
   db.close()
 
 
-@bp.route('/user/<username>')
+@bp.route('/user/<username>', methods=['GET', 'POST'])
 @login_required
 def user(username):
+    form = UploadForm()
+    if request.method == 'POST'and form.validate_on_submit():
+        file = request.files['input_file']
+        data = file.read()
+        title = request.form['title']
+        add_pdf(title, data)
+        flash('Document upload successfully')
+        return redirect(request.url)
+
     user = Users.query.filter_by(username=username).first_or_404()
     posts = [
         {'author': user, 'body': 'Test post #1'},
         {'author': user, 'body': 'Test post #2'}
     ]
-    return render_template('user.html', user=user, posts=posts)
+    return render_template('user.html', user=user, posts=posts, form=form)
 
 @bp.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
@@ -158,3 +169,27 @@ def edit_profile():
         form.about_me.data = current_user.about_me
     return render_template('edit_profile.html', title='Edit Profile',
                            form=form)
+
+
+@bp.route('/pdf')
+@login_required
+def pdf():
+    data = get_data("select pdf from pdf where id = 1")[0][0]
+    pdfdict = get_data("select json_agg(json_build_object(id,title)) from pdf")[0][0]
+    encoded_data = base64.b64encode(data).decode('utf-8')
+    return render_template('pdf/pdf.html', title='PDF', encoded_data=encoded_data, pdfdict=pdfdict)
+
+@bp.route('/pdf/<id>')
+@login_required
+def show_pdf(id):
+    data = get_data("select pdf from pdf where id = '%s'"%id)[0][0]
+    encoded_data = base64.b64encode(data).decode('utf-8')
+    pdfdict = get_data("select json_agg(json_build_object(id,title)) from pdf")[0][0]
+    return render_template('pdf/pdf.html', title=id, encoded_data=encoded_data, pdfdict=pdfdict)
+
+def add_pdf(title, pdf):
+  db = psycopg2.connect(database = DATABASE_URL)
+  c = db.cursor()
+  c.execute("insert into pdf (title, pdf) values (%s, %s)", (title, pdf))
+  db.commit()
+  db.close()
