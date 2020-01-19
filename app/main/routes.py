@@ -193,3 +193,12 @@ def add_pdf(title, pdf):
   c.execute("insert into pdf (title, pdf) values (%s, %s)", (title, pdf))
   db.commit()
   db.close()
+
+@bp.route('/california')
+@login_required
+def california():
+    query_california = "select * \
+                    from california"
+    df_cali = pd.DataFrame(get_data(query_california), columns =['lic_num', 'lic_type', 'owner', 'contact', 'e-mail', 'phone', 'website', 'structure', 'adress', 'status', 'issue', 'exp', 'activities', 'use'])
+    california_data = df_cali.to_html(index = False, classes="display compact", table_id="example")
+    return render_template('california.html', california_data=california_data)

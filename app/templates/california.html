@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Crewasis" class="center">
+    <h3 id="top">California Cannabis Businesses</h3>
+    <div id="data" style="width:100%; margin: auto;">
+        {{california_data | safe}}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+{{super()}}
+<script src="{{ url_for('static', filename='js/lib/material.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/lib/dataTables.material.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/lib/jquery.dataTables.min.js') }}"></script>
+
+<script>
+$(document).ready(function() {
+$('#example').DataTable({
+  columnDefs: [
+            {
+                targets: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ],
+                className: 'mdl-data-table__cell--non-numeric'
+            }
+        ]
+});
+} );
+</script>
+
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/lib/material.min.css') }}" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.20/datatables.min.css"/>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}" />
+
+{% endblock %}
