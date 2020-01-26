@@ -202,3 +202,25 @@ def california():
     df_cali = pd.DataFrame(get_data(query_california), columns =['lic_num', 'lic_type', 'owner', 'contact', 'e-mail', 'phone', 'website', 'structure', 'adress', 'status', 'issue', 'exp', 'activities', 'use'])
     california_data = df_cali.to_html(index = False, classes="display compact", table_id="example")
     return render_template('california.html', california_data=california_data)
+
+@bp.route('/colorado')
+@login_required
+def colorado():
+    query_colorado = "select * \
+                    from colorado_bis"
+    df_colo = pd.DataFrame(get_data(query_colorado), columns =['bus_file_num', 'lic_type', 'entity_name', 'trade_name', 'status', 'exp_data', 'adress', 'city', 'zip_code'])
+    df_colo.drop_duplicates(keep=False, inplace=True)
+    df_colo['zip_code'] = df_colo['zip_code'].astype(str).str[:-2]
+    colorado_data = df_colo.to_html(index = False, classes="display compact", table_id="example")
+#    print (colorado_data)
+    return render_template('colorado.html', colorado_data=colorado_data)
+
+@bp.route('/oregon')
+@login_required
+def oregon():
+    query_oregon = "select * \
+                    from oregon_bis"
+    df_oreg = pd.DataFrame(get_data(query_oregon), columns =['lic_num', 'lic_name', 'bus_name', 'lic_type', 'active', 'county', 'retail', 'medical', 'hemp'])
+    oregon_data = df_oreg.to_html(index = False, classes="display compact", table_id="example")
+#    print (colorado_data)
+    return render_template('oregon.html', oregon_data=oregon_data)
