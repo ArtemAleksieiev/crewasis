@@ -22,6 +22,13 @@ def create_app(config_class=Config):
 
     app.config.from_object(config_class)
     app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+    app.config['OAUTHLIB_RELAX_TOKEN_SCOPE'] = True
+    app.config['OAUTH_CREDENTIALS'] = {
+        'google': {
+            'id': '272467856329-ab3uff87hdamt83o5fa2g9dpk28j4ils.apps.googleusercontent.com',
+            'secret': 'TexyDXKuw5IJkaw6o6Gy2-fL'
+            }
+        }
 
     db.init_app(app)
     migrate.init_app(app, db)

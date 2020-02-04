@@ -7,6 +7,7 @@ from app.auth.forms import LoginForm, RegistrationForm, \
     ResetPasswordRequestForm, ResetPasswordForm
 from app.models import Users
 from app.auth.email import send_password_reset_email
+from app.auth.oauth import OAuthSignIn
 
 @bp.route('/login', methods=['GET','POST'])
 def login():
@@ -72,3 +73,33 @@ def reset_password(token):
         flash('Your password has been reset.')
         return redirect(url_for('auth.login'))
     return render_template('auth/reset_password.html', form=form)
+
+@bp.route('/authorize/<provider>')
+def oauth_authorize(provider):
+    if not current_user.is_anonymous:
+        return redirect(url_for('main.index'))
+    oauth = OAuthSignIn.get_provider(provider)
+    return oauth.authorize()
+
+@bp.route('/callback/<provider>')
+def oauth_callback(provider):
+    if not current_user.is_anonymous:
+        return redirect(url_for('main.index'))
+    oauth = OAuthSignIn.get_provider(provider)
+    username, email = oauth.callback()
+    print (username)
+    if email is None:
+        flash('Authentication failed.')
+        return redirect(url_for('main.index'))
+
+    user = Users.query.filter_by(email=email).first()
+    if not user:
+        nickname = username
+        if nickname is None or nickname == "":
+            nickname = email.split('@')[0]
+        user = Users(username=nickname, email=email)
+        db.session.add(user)
+        db.session.commit()
+        flash('Congratulations, you are now a registered user!')
+    login_user(user, True)
+    return redirect(url_for('main.index'))

@@ -9,6 +9,11 @@
         </div>
     </div>
     <br>
+     <p><a href="{{ url_for('auth.oauth_authorize', provider='google') }} ">
+       <img src="{{ url_for('static', filename='img/btn_google_2.png') }}" alt="Login with Google" width="190" height="42">
+       </a>
+     </p>
+    <br>
     <p>New User? <a href="{{ url_for('auth.register') }}">Click to Register!</a></p>
     <p>
         Forgot Your Password?
